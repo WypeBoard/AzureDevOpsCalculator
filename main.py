@@ -1,19 +1,15 @@
 from AzureDevopsClient import AzureDevopsClient
+import Constants
 from azure_devops_request_url import RequestHelper
-from calculations import PullRequestAgeCalculations, PullRequestInactiveCalculations
+from calculations import PullRequestAgeCalculations, PullRequestInactiveCalculations, PullRequestWrongTargetBranchCalculations
 from model import PullRequest, PullRequests, Thread
 from Manager import Manager
 from tqdm import tqdm
 
-TOKEN=''
-BASE_URL=''
-ORGANISATION=''
-PROJECT_NAME=''
-REPOSITORY_NAME=''
 
 def main():
-    request_helper = RequestHelper(BASE_URL, ORGANISATION, PROJECT_NAME)
-    client = AzureDevopsClient(request_helper, REPOSITORY_NAME, TOKEN) 
+    request_helper = RequestHelper(Constants.BASE_URL, Constants.ORGANISATION, Constants.PROJECT_NAME)
+    client = AzureDevopsClient(request_helper, Constants.REPOSITORY_NAME, Constants.TOKEN) 
     # Initialize base dataclass for all pull request data
     pullrequests: list[PullRequests] = []
     # Fetch all pull requests
@@ -31,6 +27,7 @@ def main():
     # Register calculations
     manager.register_calculation(PullRequestAgeCalculations.PullRequestAgeCalculations)
     manager.register_calculation(PullRequestInactiveCalculations.PullRequestInactiveCalculation)
+    manager.register_calculation(PullRequestWrongTargetBranchCalculations.PullRequestWrongTargetBranchCalculations)
     
     # Run calculations
     manager.execute()

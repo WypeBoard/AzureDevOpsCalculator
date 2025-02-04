@@ -6,10 +6,6 @@ from model import PullRequests
 
 
 class PullRequestAgeCalculations(Calculation.Calculation):
-    PULL_REQUEST_ID = 'id'
-    PULL_REQUEST_TITLE = 'title'
-    PULL_REQUEST_CREATOR = 'creator'
-    PULL_REQUEST_AGE = 'age'
 
     def prepare_data(self, data: list[PullRequests]) -> None:
         temp = copy.deepcopy(data)
@@ -20,21 +16,25 @@ class PullRequestAgeCalculations(Calculation.Calculation):
         
         self.pr_data: list[PullRequests] = open_prs
     
+    def get_rule_definition(self):
+        return f'Pull requests that are older than {self.rule_description()} days'
+    
+    def rule_description(self):
+        return 14 # days
+        
     def calculate(self) -> list:
-        age_limit = datetime.date.today() - datetime.timedelta(days=7)
+        age_limit = datetime.date.today() - datetime.timedelta(days=self.rule_description())
         results = []
         
         for pr in self.pr_data:
             creation_date = TimeUtil.parse_to_date(pr.base.creationDate)
             if creation_date < age_limit:
-                data = {
-                    self.PULL_REQUEST_ID: pr.base.pullRequestId,
-                    self.PULL_REQUEST_TITLE: pr.base.title,
-                    self.PULL_REQUEST_CREATOR: pr.base.createdBy.displayName,
-                    self.PULL_REQUEST_AGE: (datetime.date.today() - creation_date).days
-                }
+                data = self.construct_result_data(pr, (datetime.date.today() - creation_date).days)
                 results.append(data)
         return results
 
     def export_file_name(self) -> str:
         return "PullRequestAgeCalculations"
+
+    def is_mail_enabled(self) -> bool:
+        return True

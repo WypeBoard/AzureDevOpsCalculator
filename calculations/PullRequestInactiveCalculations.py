@@ -1,16 +1,12 @@
 import copy
+import Constants
 import TimeUtil
 from calculations import Calculation
 from model import PullRequests
 
 
 class PullRequestInactiveCalculation(Calculation.Calculation):
-    
-    PULL_REQUEST_ID = 'id'
-    PULL_REQUEST_TITLE = 'title'
-    PULL_REQUEST_CREATOR = 'creator'
-    PULL_REQUEST_LAST_ACTIVITY = 'last_activity'
-    
+        
     def prepare_data(self, data: list[PullRequests]) -> None:
         temp = copy.deepcopy(data)
         open_prs = []
@@ -20,25 +16,30 @@ class PullRequestInactiveCalculation(Calculation.Calculation):
         
         self.pr_data: list[PullRequests] = open_prs
 
+    def get_rule_definition(self):
+        return f'Pull requests that have been inactive for {self.rule_description()} days'
 
+    def rule_description(self):
+        return 7 # 7 days 
+    
     def calculate(self) -> list:
         results = []
         for pr in self.pr_data:
-            last_activity = None
+            last_activity:str = None
             for thread in pr.threads:
                 if last_activity is None or thread.lastUpdatedDate > last_activity:
                     last_activity = thread.lastUpdatedDate
             if last_activity is None:
                 continue
-            data = {
-                self.PULL_REQUEST_ID: pr.base.pullRequestId,
-                self.PULL_REQUEST_TITLE: pr.base.title,
-                self.PULL_REQUEST_CREATOR: pr.base.createdBy.displayName,
-                self.PULL_REQUEST_LAST_ACTIVITY: TimeUtil.clean_date(last_activity)
-            }
+            if TimeUtil.parse_to_date(last_activity) > TimeUtil.days_ago(7):
+                continue
+            data = self.construct_result_data(pr, TimeUtil.clean_date(last_activity))
             results.append(data)
             
         return results
 
     def export_file_name(self) -> str:
         return "PullRequestInactiveCalculation"
+    
+    def is_mail_enabled(self):
+        return True

@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 def parse_to_date(timestamp: str) -> date:
@@ -6,6 +6,9 @@ def parse_to_date(timestamp: str) -> date:
     date_part = timestamp.split("T")[0]
     # Parse the date part to datetime.date object
     return datetime.strptime(date_part, "%Y-%m-%d").date()
+
+def days_ago(days: int) -> date:
+    return date.today() - timedelta(days=days)
 
 def clean_date(timestamp: str) -> str:
     formats = [
@@ -21,7 +24,6 @@ def clean_date(timestamp: str) -> str:
         except ValueError:
             continue
         except TypeError:
-            print("fuck!")
             continue
     
     raise ValueError("Invalid date format")
