@@ -17,13 +17,14 @@ class PullRequestAgeCalculations(Calculation.Calculation):
         self.pr_data: list[PullRequests] = open_prs
     
     def get_rule_definition(self):
-        return f'Pull requests that are older than {self.rule_description()} days'
+        return f'Pull requests that are older than {self.rule_description} days'
     
+    @property
     def rule_description(self):
         return 14 # days
         
     def calculate(self) -> list:
-        age_limit = datetime.date.today() - datetime.timedelta(days=self.rule_description())
+        age_limit = datetime.date.today() - datetime.timedelta(days=self.rule_description)
         results = []
         
         for pr in self.pr_data:

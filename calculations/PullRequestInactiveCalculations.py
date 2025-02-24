@@ -31,7 +31,7 @@ class PullRequestInactiveCalculation(Calculation.Calculation):
                     last_activity = thread.lastUpdatedDate
             if last_activity is None:
                 continue
-            if TimeUtil.parse_to_date(last_activity) > TimeUtil.days_ago(7):
+            if TimeUtil.parse_to_date(last_activity) > TimeUtil.days_ago(self.rule_description()):
                 continue
             data = self.construct_result_data(pr, TimeUtil.clean_date(last_activity))
             results.append(data)

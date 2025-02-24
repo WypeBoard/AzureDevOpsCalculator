@@ -12,20 +12,27 @@ class Mail:
 class MailSender:
     
     def send_mails(self, mails: list[Mail]):
-        for mail in mails:
-            self.send_mail(mail)
-    
-    def send_mail(self, mail: Mail):
         if Constants.MAIL_SEND_ENABLED:
+            self.varify()
             outlook = client.Dispatch('Outlook.Application')
-            email = outlook.CreateItem(0)
-            email.To = mail.reciever
-            email.Subject = mail.subject
-            email.HTMLBody = mail.content
-            email.Send()
+            for mail in mails:
+                self.send_mail(mail, outlook)
         else:
-            print(f"Would have sent mail to {mail.reciever} with subject {mail.subject}\n")
-            print(mail.content)
-            print('\n\n\n')
-            
+            for mail in mails:
+                print(f"Would have sent mail to {mail.reciever} with subject {mail.subject}\n")
+                print(mail.content)
+                print('\n\n\n')
+    
+    def send_mail(self, mail: Mail, outlookClient):
+        email = outlookClient.CreateItem(0)
+        email.To = mail.reciever
+        email.Subject = mail.subject
+        email.HTMLBody = mail.content
+        email.Send()    
+    
+    def varify(self):
+        user_input = input("Are you sure you want to send mails? [y][true] to send mails")
+        if user_input.lower() not in ['y', 'true']:
+            raise Exception("Aborted sending mails")
+        
         
