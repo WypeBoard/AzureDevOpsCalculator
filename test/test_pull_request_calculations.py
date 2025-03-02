@@ -71,9 +71,7 @@ def test_pull_request_wrong_target_branch_calculations(mock_re_compile, mock_pul
 
 
 ### PullRequestInactiveCalculation Tests ###
-@patch("TimeUtil.parse_to_date", side_effect=lambda x: date.fromisoformat(x))
-@patch("TimeUtil.days_ago", side_effect=lambda days: date.today() - timedelta(days=days))
-def test_pull_request_inactive_calculation(mock_days_ago, mock_time_util, mock_pull_requests):
+def test_pull_request_inactive_calculation(mock_pull_requests):
     calc = PullRequestInactiveCalculation()
     calc.prepare_data(mock_pull_requests)
 
