@@ -12,8 +12,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # Runs on the latest Ubuntu environment
-
+    runs-on: windows-latest  # Change from ubuntu-latest to windows-latest
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4  # Pulls your repo into the GitHub runner
