@@ -2,10 +2,10 @@ from datetime import date, timedelta
 from unittest.mock import patch
 
 import pytest
-from calculations.PullRequestInactiveCalculations import PullRequestInactiveCalculation
 
 from calculations.PullRequestAgeCalculations import PullRequestAgeCalculations
 from calculations.PullRequestWrongTargetBranchCalculations import PullRequestWrongTargetBranchCalculations
+from calculations.PullRequestInactiveCalculations import PullRequestInactiveCalculation
 from model import PullRequests, PullRequest, CreatedBy, Repository, Thread
 
 
