@@ -69,5 +69,7 @@ class Calculation(ABC):
         return url
     
     def parse_email_from_unique_name(self, unique_name):
+        if '\\' not in unique_name:
+            return unique_name
         local_part = unique_name.split('\\')[1]
         return f'{local_part}{Constants.MAIL_DOMAIN}'

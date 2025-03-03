@@ -1,5 +1,4 @@
 import copy
-import Constants
 import TimeUtil
 from calculations import Calculation
 from model import PullRequests
