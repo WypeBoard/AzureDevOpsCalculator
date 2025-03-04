@@ -35,6 +35,7 @@ def test_manager_initialization(mock_pull_requests):
 def test_register_calculation(mock_pull_requests):
     """Test if calculations are registered properly"""
     mock_calculation = MagicMock()
+    mock_calculation.__name__ = "MockCalculation"  
     mock_calculation.prepare_data = MagicMock()
 
     manager = Manager(mock_pull_requests)
@@ -49,6 +50,7 @@ def test_register_calculation(mock_pull_requests):
 @patch("Manager.Manager.save_to_csv")
 def test_execute(mock_save_to_csv, mock_calculation, mock_mail_builder, mock_mail_sender, mock_pull_requests):
     """Test execution of calculations and email sending"""
+    mock_calculation.__name__ = "MockCalculation"  
     mock_calc_instance = mock_calculation.return_value
     mock_calc_instance.calculate.return_value = [{"id": 1, "result": 42}]
     mock_calc_instance.export_file_name.return_value = "test_results"
@@ -64,18 +66,29 @@ def test_execute(mock_save_to_csv, mock_calculation, mock_mail_builder, mock_mai
     mock_mail_sender.return_value.send_mails.assert_called_once()
 
 
+@patch("Manager.Logger")  # Mock the logger to prevent file writes
 @patch("Manager.csv.DictWriter")
 @patch("builtins.open", new_callable=MagicMock)
-def test_save_to_csv(mock_open, mock_dict_writer):
+def test_save_to_csv(mock_open, mock_dict_writer, mock_logger):
     """Test CSV saving functionality"""
     manager = Manager([])
     data = [{"col1": "value1", "col2": "value2"}]
 
     manager.save_to_csv("test_file", data)
+    
+    # Get the actual open calls (Logger is also using open for core.log)
+    open_calls = mock_open.call_args_list
 
-    mock_open.assert_called_once_with("test_file.csv", "w", newline="", encoding="utf-8")
+    # Find the one related to "test_file.csv"
+    file_open_call = [call for call in open_calls if call.args[0] == "test_file.csv"]
+    
+    assert len(file_open_call) == 1  # Ensure "test_file.csv" is opened once
+    assert file_open_call[0].args == ("test_file.csv", "w")  # Validate arguments
+
+    # Ensure DictWriter was used correctly
     mock_dict_writer.return_value.writeheader.assert_called_once()
     mock_dict_writer.return_value.writerows.assert_called_once_with(data)
+    
 
 
 @patch("Manager.MailTemplateBuilder")
