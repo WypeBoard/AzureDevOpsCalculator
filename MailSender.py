@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from win32com import client
 import Constants
-
+from logger import Logger
 
 @dataclass
 class Mail:
@@ -11,9 +11,13 @@ class Mail:
 
 class MailSender:
     
+    def __init__(self):
+        self.logger = Logger(__name__)
+    
     def send_mails(self, mails: list[Mail]):
         if Constants.MAIL_SEND_ENABLED:
             self.varify()
+            self.logger.info("Sending mails...")
             outlook = client.Dispatch('Outlook.Application')
             for mail in mails:
                 self.send_mail(mail, outlook)
@@ -28,11 +32,12 @@ class MailSender:
         email.To = mail.reciever
         email.Subject = mail.subject
         email.HTMLBody = mail.content
-        email.Send()    
-    
+        email.Send()
+            
     def varify(self):
-        user_input = input("Are you sure you want to send mails? [y][true] to send mails")
+        user_input = input("Are you sure you want to send mails? [y][true] to send mails: ")
         if user_input.lower() not in ['y', 'true']:
+            self.logger.warning("Aborted sending mails")
             raise Exception("Aborted sending mails")
-        
-        
+        self.logger.info("User confirmed to send mails")
+

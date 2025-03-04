@@ -6,8 +6,8 @@ BASE_URL=''
 ORGANISATION=''
 PROJECT_NAME=''
 REPOSITORY_NAME=''
-MAIL_SEND_ENABLED=False
 MAIL_DOMAIN=''
+MAIL_SEND_ENABLED=False
 
 ####################################################
 # Calculation Constants
