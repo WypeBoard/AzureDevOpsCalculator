@@ -1,10 +1,10 @@
 from AzureDevopsClient import AzureDevopsClient
 import Constants
 from azure_devops_request_url import RequestHelper
-from calculations import PullRequestAgeCalculations, PullRequestInactiveCalculations, PullRequestWrongTargetBranchCalculations
 from logger import Logger
+from manager.manager_stategy import get_calculations, get_manager
 from model import PullRequest, PullRequests, Thread
-from Manager import Manager
+from manager.Manager import Manager
 from tqdm import tqdm
 
 
@@ -29,12 +29,12 @@ def main():
     log.info("Data from ADO has been fetched")
     # Initialize statistic manager
     log.info("Generating Manager class")
-    manager = Manager(pullrequests)
+    manager = get_manager(pullrequests)
     # Register calculations
     log.debug("Registering calculations")
-    manager.register_calculation(PullRequestAgeCalculations.PullRequestAgeCalculations)
-    manager.register_calculation(PullRequestInactiveCalculations.PullRequestInactiveCalculation)
-    manager.register_calculation(PullRequestWrongTargetBranchCalculations.PullRequestWrongTargetBranchCalculations)
+    for calculation in get_calculations():
+        manager.register_calculation(calculation)
+    
     # Run calculations
     log.info("Starting manager execution")
     manager.execute()

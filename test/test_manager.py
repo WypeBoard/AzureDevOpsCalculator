@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from Manager import Manager
+from manager.Manager import Manager
 from model import PullRequests, PullRequest, CreatedBy, Repository, Thread, Comment
 import Constants
 
@@ -44,10 +44,10 @@ def test_register_calculation(mock_pull_requests):
     assert len(manager.calculations) == 1
 
 
-@patch("Manager.MailSender")
-@patch("Manager.MailTemplateBuilder")
-@patch("Manager.Calculation")
-@patch("Manager.Manager.save_to_csv")
+@patch("manager.Manager.MailSender")
+@patch("manager.Manager.MailTemplateBuilder")
+@patch("manager.Manager.Calculation")
+@patch("manager.Manager.Manager.save_to_csv")
 def test_execute(mock_save_to_csv, mock_calculation, mock_mail_builder, mock_mail_sender, mock_pull_requests):
     """Test execution of calculations and email sending"""
     mock_calculation.__name__ = "MockCalculation"  
@@ -66,8 +66,8 @@ def test_execute(mock_save_to_csv, mock_calculation, mock_mail_builder, mock_mai
     mock_mail_sender.return_value.send_mails.assert_called_once()
 
 
-@patch("Manager.Logger")  # Mock the logger to prevent file writes
-@patch("Manager.csv.DictWriter")
+@patch("manager.Manager.Logger")  # Mock the logger to prevent file writes
+@patch("manager.Manager.csv.DictWriter")
 @patch("builtins.open", new_callable=MagicMock)
 def test_save_to_csv(mock_open, mock_dict_writer, mock_logger):
     """Test CSV saving functionality"""
@@ -91,7 +91,7 @@ def test_save_to_csv(mock_open, mock_dict_writer, mock_logger):
     
 
 
-@patch("Manager.MailTemplateBuilder")
+@patch("manager.Manager.MailTemplateBuilder")
 def test_combine_results(mock_mail_builder, mock_pull_requests):
     """Test results combination"""
     manager = Manager(mock_pull_requests)
