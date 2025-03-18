@@ -2,12 +2,12 @@
 # Core Constants
 ####################################################
 TOKEN=''
-BASE_URL=''
-ORGANISATION=''
-PROJECT_NAME=''
-REPOSITORY_NAME=''
-MAIL_DOMAIN=''
-MAIL_SEND_ENABLED=False
+BASE_URL='https://pat-source.netcompany.com/tfs'
+ORGANISATION='NC02'
+PROJECT_NAME='KOMBITKY'
+REPOSITORY_NAME='KOMBITKY'
+MAIL_DOMAIN='@netcompany.com'
+MAIL_SEND_ENABLED=True
 
 ####################################################
 # Calculation Constants

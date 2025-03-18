@@ -12,8 +12,8 @@ def main():
     log = Logger(__name__)
     log.info("Starting script")
     log.debug("Initializing ADO client and fetching data")
-    request_helper = RequestHelper(Constants.BASE_URL, Constants.ORGANISATION, Constants.PROJECT_NAME)
-    client = AzureDevopsClient(request_helper, Constants.REPOSITORY_NAME, Constants.TOKEN) 
+    request_helper = RequestHelper()
+    client = AzureDevopsClient(request_helper) 
     # Initialize base dataclass for all pull request data
     pullrequests: list[PullRequests] = []
     # Fetch all pull requests
