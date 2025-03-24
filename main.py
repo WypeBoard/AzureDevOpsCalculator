@@ -1,5 +1,4 @@
 from AzureDevopsClient import AzureDevopsClient
-import Constants
 from azure_devops_request_url import RequestHelper
 from logger import Logger
 from manager.manager_stategy import get_calculations, get_manager

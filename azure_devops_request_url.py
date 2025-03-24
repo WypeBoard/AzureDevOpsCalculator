@@ -6,9 +6,9 @@ class RequestHelper:
         
     def __init__(self):
         settings = Settings().AdoSettings
-        self.ADO_BASE_API_URL_PROJECT = f'{settings.base_url}/{settings.organization}/{settings.project}/_apis';
-        self.ADO_BASE_API_URL_ORGANIZATION = f'{settings.base_url}/{settings.organization}/_apis';
-        self.ADO_BASE_CORE_PROJECT_URL = f'{settings.base_url}/{settings.organization}/_apis/projects/{settings.project}';
+        self.ADO_BASE_API_URL_PROJECT = f'{settings.base_url}/{settings.organisation}/{settings.project_name}/_apis';
+        self.ADO_BASE_API_URL_ORGANIZATION = f'{settings.base_url}/{settings.organisation}/_apis';
+        self.ADO_BASE_CORE_PROJECT_URL = f'{settings.base_url}/{settings.organisation}/_apis/projects/{settings.project_name}';
 
         self.ADO_API_VERSION_PROJECT = "7.1";
         self.ADO_API_VERSION_ORGANIZATION = "7.0-preview";

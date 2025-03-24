@@ -6,8 +6,8 @@ from model import PullRequests
 
 class PullRequestWrongTargetBranchCalculations(Calculation.Calculation):
 
-    CURRENT_BRANCH = '10'
-    MAJOR_RELEASE_BRANCH = '11'
+    CURRENT_BRANCH = '11'
+    MAJOR_RELEASE_BRANCH = '12'
     BENEFIT_BRANCH = '2'
 
     def prepare_data(self, data: list) -> None:
@@ -28,14 +28,13 @@ class PullRequestWrongTargetBranchCalculations(Calculation.Calculation):
             r'ky/main$',
             r'ky/users/(.*)',  # User repository allow all
             r'ky/dev/ad-hoc$',
-            r'ky/dev/10\.0-patches$',
-            r'ky/dev/11\.0$',
-            r'ky/dev/12\.0$',
             r'ky/dev/kr/2\.0$',
             r'ky/dev/kr/3\.0$',
-            r'ky/dev/amplio-1.0'
+            r'ky/dev/amplio-1.0',
+            fr'ky/dev/{self.CURRENT_BRANCH}\.0-patches$',
+            fr'ky/dev/{self.MAJOR_RELEASE_BRANCH}\.0$',
             fr'ky/release/{self.CURRENT_BRANCH}(.*)$',
-            fr'ky/release/ad-hoc/{self.CURRENT_BRANCH}(.*)',
+            fr'ky/release/ad-hoc/{self.CURRENT_BRANCH}(.*)'
         ]
 
     def calculate(self) -> list:

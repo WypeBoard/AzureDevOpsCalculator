@@ -1,10 +1,10 @@
 import csv
 from typing import Dict
 
-import Constants
 from MailSender import MailSender
 from MailTemplateBuilder import MailTemplateBuilder, PRInfo
 from calculations import Calculation
+from config import Settings
 from logger import Logger
 from model import PullRequests
 
@@ -17,6 +17,7 @@ class Manager:
         self.calculations = []
         self.email_builder = MailTemplateBuilder()  # Initialize email builder
         self.email_sender = MailSender()  # Initialize email sender
+        self.settings = Settings()
         self.log = Logger(__name__)
         self.log.info("Manager initialized with raw data.")
         
@@ -46,7 +47,7 @@ class Manager:
             
     def combine_results(self, results: list, rule: str) -> None:
         for result in results:
-            pr_id = result[Constants.PULL_REQUEST_ID]
+            pr_id = result[self.settings.CalculationSettings.pull_request_id]
             if pr_id not in self.combined_results:
                 self.combined_results[pr_id] = {}
             self.combined_results[pr_id].update(result)
@@ -54,11 +55,17 @@ class Manager:
             
             # Add data to email builder
             pr_info = PRInfo(
-                pr_id=result[Constants.PULL_REQUEST_ID], 
-                title=result[Constants.PULL_REQUEST_TITLE], 
-                url=result[Constants.PULL_REQUEST_URL],
+                pr_id=result[self.settings.CalculationSettings.pull_request_id], 
+                title=result[self.settings.CalculationSettings.pull_request_title], 
+                url=result[self.settings.CalculationSettings.pull_request_url],
             )
-            self.email_builder.add_pr_info(result[Constants.PULL_REQUEST_CREATOR], rule, result[Constants.PULL_REQUEST_EMAIL], pr_info)
+            
+            self.email_builder.add_pr_info(
+                result[self.settings.CalculationSettings.pull_request_creator], 
+                rule, 
+                result[self.settings.CalculationSettings.pull_request_email], 
+                pr_info
+            )
             self.log.debug(f"Added PR info to email builder for PR ID {pr_id}.")
             
     def save_to_csv(self, filename: str, data: dict) -> None:

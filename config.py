@@ -1,4 +1,7 @@
-from pydantic import BaseSettings, Field
+
+from pydantic import Field
+from pydantic_settings import BaseSettings
+
 
 class CoreSettings(BaseSettings):
     mail_domain: str = Field(default="")
@@ -7,6 +10,7 @@ class CoreSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_prefix = "CORE_"
+        extra = "ignore"
         case_sensitive = False
 
     
@@ -20,6 +24,7 @@ class AdoSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_prefix = "ADO_"
+        extra = "ignore"
         case_sensitive = False
 
 
@@ -35,6 +40,7 @@ class CalculationSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_prefix = "CALCULATION_"
+        extra = "ignore"
         case_sensitive = False
         
 class Settings:

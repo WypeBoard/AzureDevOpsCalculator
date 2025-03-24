@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from win32com import client
-import Constants
+from config import Settings
 from logger import Logger
 
 @dataclass
@@ -13,9 +13,10 @@ class MailSender:
     
     def __init__(self):
         self.logger = Logger(__name__)
+        self.settings = Settings()
     
     def send_mails(self, mails: list[Mail]):
-        if Constants.MAIL_SEND_ENABLED:
+        if self.settings.CoreSettings.mail_send_enabled:
             self.varify()
             self.logger.info("Sending mails...")
             outlook = client.Dispatch('Outlook.Application')
