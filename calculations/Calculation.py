@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-import Constants
+from config import AdoSettings, Settings
 from model import PullRequests
 
 
@@ -49,27 +49,28 @@ class Calculation(ABC):
         return False
     
     def construct_result_data(self, pr, violation):
-        email = self.parse_email_from_unique_name(pr.base.createdBy.uniqueName)
-        url = self.parse_url(pr.base.pullRequestId)
+        settings = Settings()
+        email = self.parse_email_from_unique_name(pr.base.createdBy.uniqueName, settings.CoreSettings.mail_domain)
+        url = self.parse_url(pr.base.pullRequestId, settings.AdoSettings)
         data = {
-            Constants.PULL_REQUEST_ID: pr.base.pullRequestId,
-            Constants.PULL_REQUEST_TITLE: pr.base.title,
-            Constants.PULL_REQUEST_CREATOR_ID: pr.base.createdBy.id,
-            Constants.PULL_REQUEST_CREATOR: pr.base.createdBy.displayName,
-            Constants.PULL_REQUEST_EMAIL: email,
-            Constants.PULL_REQUEST_URL: url,
-            Constants.PULL_REQUEST_VIOLATION: violation
+            settings.CalculationSettings.pull_request_id: pr.base.pullRequestId,
+            settings.CalculationSettings.pull_request_title: pr.base.title,
+            settings.CalculationSettings.pull_request_creator_id: pr.base.createdBy.id,
+            settings.CalculationSettings.pull_request_creator: pr.base.createdBy.displayName,
+            settings.CalculationSettings.pull_request_email: email,
+            settings.CalculationSettings.pull_request_url: url,
+            settings.CalculationSettings.pull_request_violation: violation
         }
         return data
     
-    def parse_url(self, pull_request_id):
+    def parse_url(self, pull_request_id, settings: AdoSettings):
         """ Removing 'pat-' and change '_api' to '_git' from url """  
-        url = f'{Constants.BASE_URL}/{Constants.ORGANISATION}/{Constants.PROJECT_NAME}/_git/{Constants.REPOSITORY_NAME}/pullrequest/{pull_request_id}'
+        url = f'{settings.base_url}/{settings.organisation}/{settings.project_name}/_git/{settings.repository_name}/pullrequest/{pull_request_id}'
         url = url.replace('https://pat-', 'https://')
         return url
     
-    def parse_email_from_unique_name(self, unique_name):
+    def parse_email_from_unique_name(self, unique_name, mail_domain: str):
         if '\\' not in unique_name:
             return unique_name
         local_part = unique_name.split('\\')[1]
-        return f'{local_part}{Constants.MAIL_DOMAIN}'
+        return f'{local_part}{mail_domain}'

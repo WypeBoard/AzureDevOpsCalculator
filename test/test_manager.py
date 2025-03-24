@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import MagicMock, patch
 from manager.Manager import Manager
 from model import PullRequests, PullRequest, CreatedBy, Repository, Thread, Comment
-import Constants
 
 
 @pytest.fixture
@@ -99,16 +98,16 @@ def test_combine_results(mock_mail_builder, mock_pull_requests):
 
     results = [
         {
-            Constants.PULL_REQUEST_ID: 1,
-            Constants.PULL_REQUEST_TITLE: "Fix Bug",
-            Constants.PULL_REQUEST_URL: "http://example.com/pr1",
-            Constants.PULL_REQUEST_CREATOR: "test@example.com",
-            Constants.PULL_REQUEST_EMAIL: "test@example.com",
+            'id': 1,
+            'title': "Fix Bug",
+            'url': "url",
+            'creator': "creator",
+            'email': "emain",
         }
     ]
 
     manager.combine_results(results, "test_rule")
 
     assert 1 in manager.combined_results
-    assert manager.combined_results[1][Constants.PULL_REQUEST_TITLE] == "Fix Bug"
+    assert manager.combined_results[1]['title'] == "Fix Bug"
     mock_mail_builder_instance.add_pr_info.assert_called_once()
