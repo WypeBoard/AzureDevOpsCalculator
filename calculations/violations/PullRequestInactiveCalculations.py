@@ -1,10 +1,10 @@
 import copy
 import TimeUtil
-from calculations import Calculation
+from calculations.violations.violations_calculations import ViolationsCalculation
 from model import PullRequests
 
 
-class PullRequestInactiveCalculation(Calculation.Calculation):
+class PullRequestInactiveCalculation(ViolationsCalculation):
         
     def prepare_data(self, data: list[PullRequests]) -> None:
         temp = copy.deepcopy(data)

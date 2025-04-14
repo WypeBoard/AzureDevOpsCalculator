@@ -1,10 +1,10 @@
 import copy
 import re
-from calculations import Calculation
+from calculations.violations.violations_calculations import ViolationsCalculation
 from model import PullRequests
 
 
-class PullRequestWrongTargetBranchCalculations(Calculation.Calculation):
+class PullRequestWrongTargetBranchCalculations(ViolationsCalculation):
 
     CURRENT_BRANCH = '11'
     MAJOR_RELEASE_BRANCH = '12'

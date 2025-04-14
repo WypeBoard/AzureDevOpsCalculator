@@ -1,11 +1,11 @@
 import copy
 import datetime
 import TimeUtil
-from calculations import Calculation
+from calculations.violations.violations_calculations import ViolationsCalculation
 from model import PullRequests
 
 
-class PullRequestAgeCalculations(Calculation.Calculation):
+class PullRequestAgeCalculations(ViolationsCalculation):
 
     def prepare_data(self, data: list[PullRequests]) -> None:
         temp = copy.deepcopy(data)
